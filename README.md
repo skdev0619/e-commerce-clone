@@ -18,8 +18,8 @@
 [선착순 쿠폰](docs/쿠폰.md)  |
 [인기 판매 상품 조회](docs/베스트셀러조회.md)
 
-
 ### 5. 데이터 모델링
+[ERD](docs/erd.md)
 
 ### 6. 마일스톤
 [마일스톤](https://github.com/users/skdev0619/projects/1/views/5)
