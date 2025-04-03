@@ -1,13 +1,18 @@
-## 프로젝트
+# E-commerce
 
-## Getting Started
+### 1. 개요
+이 프로젝트는 **전자상거래(e-commerce)의 핵심 기능**을 간소화하여 구현한 학습용 프로젝트입니다.  
+**잔액 관리, 상품, 주문, 결제, 선착순 쿠폰 발급, 인기 상품 조회** 등 필수적인 기능을 중심으로 설계하였습니다.
 
-### Prerequisites
+### 2. 요구사항
+[요구사항](docs/요구사항.md)
 
-#### Running Docker Containers
+### 3. 용어 사전
+[용어사전](docs/용어사전.md)
 
-`local` profile 로 실행하기 위하여 인프라가 설정되어 있는 Docker 컨테이너를 실행해주셔야 합니다.
+### 4. API 설계
 
-```bash
-docker-compose up -d
-```
+### 5. 데이터 모델링
+
+### 6. 마일스톤
+[마일스톤](https://github.com/users/skdev0619/projects/1/views/5)
