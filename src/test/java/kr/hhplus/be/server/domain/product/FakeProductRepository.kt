@@ -18,4 +18,8 @@ class FakeProductRepository : ProductRepository {
     override fun findAll(): List<Product> {
         return products.values.toList()
     }
+
+    override fun findByIdIn(ids: List<Long>): List<Product> {
+        return products.values.filter { ids.contains(it.id) }
+    }
 }

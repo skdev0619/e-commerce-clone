@@ -18,4 +18,8 @@ class ProductJpaRepository : ProductRepository {
     override fun findAll(): List<Product> {
         TODO("Not yet implemented")
     }
+
+    override fun findByIdIn(ids: List<Long>): List<Product> {
+        TODO("Not yet implemented")
+    }
 }
