@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.coupon.domain
 
 import kr.hhplus.be.server.domain.common.AuditInfo
+import kr.hhplus.be.server.domain.coupon.DiscountType
 
 class Coupon(
     val id: Long,

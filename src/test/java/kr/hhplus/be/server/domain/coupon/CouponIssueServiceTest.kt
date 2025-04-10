@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.coupon
 
 import kr.hhplus.be.server.coupon.domain.Coupon
-import kr.hhplus.be.server.coupon.domain.DiscountType
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.DisplayName
