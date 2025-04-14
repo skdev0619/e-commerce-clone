@@ -17,6 +17,7 @@ class OrderController(
     @PostMapping
     override fun createOrder(@RequestBody request: OrderCreateRequest): ResponseEntity<OrderCreateResponse> {
         val orderResult = orderFacade.createOrder(OrderCreateRequest.from(request))
+
         val response = OrderCreateResponse.from(orderResult)
 
         return ResponseEntity.created(URI.create("api/v1/orders/${response.id}")).body(response)

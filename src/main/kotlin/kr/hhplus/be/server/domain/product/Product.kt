@@ -12,8 +12,14 @@ class Product(
 ) {
     constructor(name: String, price: Int, stock: Int) : this(0L, name, BigDecimal(price), stock)
 
+    fun validateStock(requestStock: Int) {
+        if (this.stock < requestStock) {
+            throw IllegalArgumentException("상품의 재고가 부족합니다")
+        }
+    }
+
     fun decreaseStock(quantity: Int) {
-        require(stock >= quantity) { "상품의 재고가 부족합니다." }
+        validateStock(quantity)
         stock -= quantity
         auditInfo.update()
     }

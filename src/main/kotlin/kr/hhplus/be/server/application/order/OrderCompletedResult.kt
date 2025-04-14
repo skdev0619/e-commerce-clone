@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.order
 
-import kr.hhplus.be.server.application.order.internal.OrderCreateResult
-import kr.hhplus.be.server.application.order.internal.OrderPaymentResult
+import kr.hhplus.be.server.domain.payment.Payment
+import kr.hhplus.be.server.domain.order.Order
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -22,7 +22,7 @@ data class OrderCompletedResult(
     val paymentId: Long
 ) {
     companion object {
-        fun from(order: OrderCreateResult, pay: OrderPaymentResult): OrderCompletedResult {
+        fun from(order: Order, payment: Payment): OrderCompletedResult {
             val items = order.orderItems.items.map { OrderItemResult(it.productId, it.quantity, it.price) }
 
             return OrderCompletedResult(
@@ -33,7 +33,7 @@ data class OrderCompletedResult(
                 order.orderDateTime,
                 items,
                 order.totalPrice,
-                pay.paymentId
+                payment.id
             )
         }
     }

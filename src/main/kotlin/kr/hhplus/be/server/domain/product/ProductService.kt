@@ -6,12 +6,28 @@ import org.springframework.stereotype.Service
 class ProductService(
     val productRepository: ProductRepository
 ) {
-    fun decreaseStock(productQuantityPairs: List<Pair<Long, Int>>) {
-        productQuantityPairs.forEach { (productId, quantity) ->
-            val product = productRepository.findById(productId)
-                ?: throw NoSuchElementException("존재하지 않는 상품입니다.")
 
-            product.decreaseStock(quantity)
+    fun validateStock(productQuantities: List<ProductQuantity>) {
+        val productIds = productQuantities.map { it.productId }
+        val products = productRepository.findByIdIn(productIds)
+
+        for (product in products) {
+            productQuantities.find { it.productId == product.id }?.let {
+                val quantity = it.quantity
+                product.validateStock(quantity)
+            }
+        }
+    }
+
+    fun decreaseStock(productQuantities: List<ProductQuantity>) {
+        val productIds = productQuantities.map { it.productId }
+        val products = productRepository.findByIdIn(productIds)
+
+        for (product in products) {
+            productQuantities.find { it.productId == product.id }?.let {
+                val quantity = it.quantity
+                product.decreaseStock(quantity)
+            }
         }
     }
 }

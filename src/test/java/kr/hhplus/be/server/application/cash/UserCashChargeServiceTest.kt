@@ -6,10 +6,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.UnitsBottom
 import java.math.BigDecimal
 
 @ExtendWith(MockitoExtension::class)
@@ -18,12 +20,8 @@ class UserCashChargeServiceTest {
     @Mock
     private lateinit var userCashService: UserCashService
 
+    @InjectMocks
     private lateinit var userCashChargeService: UserCashChargeService
-
-    @BeforeEach
-    fun setUp() {
-        userCashChargeService = UserCashChargeService(userCashService)
-    }
 
     @DisplayName("잔액 충전 시 정상 결과가 반환되고 userCashService 가 호출된다")
     @Test
