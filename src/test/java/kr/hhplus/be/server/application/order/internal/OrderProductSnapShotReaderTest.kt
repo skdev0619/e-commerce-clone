@@ -3,7 +3,6 @@ package kr.hhplus.be.server.application.order.internal
 import kr.hhplus.be.server.domain.product.Product
 import kr.hhplus.be.server.domain.product.ProductRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,6 +17,7 @@ class OrderProductSnapShotReaderTest {
 
     @Mock
     private lateinit var productRepository: ProductRepository
+
     @InjectMocks
     private lateinit var productReader: OrderProductSnapShotReader
 
@@ -27,8 +27,8 @@ class OrderProductSnapShotReaderTest {
         // given
         val productIds = listOf(1L, 2L)
         val products = listOf(
-            Product(1L, "상품1", 10_000, 100),
-            Product(2L, "상품2", 20_000, 90)
+            Product(1L, "상품1", BigDecimal(10_000), 100),
+            Product(2L, "상품2", BigDecimal(20_000), 90)
         )
         `when`(productRepository.findByIdIn(productIds)).thenReturn(products)
 

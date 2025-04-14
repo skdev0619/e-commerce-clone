@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.order.internal
 
-import kr.hhplus.be.server.coupon.domain.DiscountType
 import kr.hhplus.be.server.domain.coupon.CouponStatus
+import kr.hhplus.be.server.domain.coupon.DiscountType
 import kr.hhplus.be.server.domain.coupon.IssuedCouponQueryRepository
 import kr.hhplus.be.server.domain.order.OrderCouponSnapShot
 import kr.hhplus.be.server.domain.order.OrderDiscountType

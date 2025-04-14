@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.coupon.domain
+package kr.hhplus.be.server.domain.coupon
 
 enum class DiscountType {
     FIXED_AMOUNT, PERCENTAGE

@@ -4,4 +4,5 @@ interface ProductRepository {
     fun save(product: Product): Product
     fun findById(id: Long): Product?
     fun findAll(): List<Product>
+    fun findByIdIn(ids: List<Long>): List<Product>
 }
