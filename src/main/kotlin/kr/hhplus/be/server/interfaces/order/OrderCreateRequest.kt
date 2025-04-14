@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.interfaces.order
 
-import kr.hhplus.be.server.application.order.OrderCreateCommand
+import kr.hhplus.be.server.application.order.OrderCriteria
 import kr.hhplus.be.server.application.order.OrderItemCommand
 
 data class OrderItemRequest(
@@ -15,9 +15,9 @@ data class OrderCreateRequest(
     val issueCouponId: Long?
 ) {
     companion object {
-        fun from(request: OrderCreateRequest): OrderCreateCommand {
+        fun from(request: OrderCreateRequest): OrderCriteria {
             val orderItems = request.orderItems.map { OrderItemCommand(it.productId, it.quantity, it.price) }
-            return OrderCreateCommand(request.userId, orderItems, request.issueCouponId)
+            return OrderCriteria(request.userId, orderItems, request.issueCouponId)
         }
     }
 }

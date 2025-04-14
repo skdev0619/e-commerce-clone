@@ -14,8 +14,30 @@ class Order(
     val totalPrice: BigDecimal,
     val auditInfo: AuditInfo = AuditInfo()
 ) {
-    constructor(userId: Long, status: OrderStatus, issueCouponId: Long?, orderItems: OrderItems, totalPrice: BigDecimal)
-            : this(0, userId, status, issueCouponId, LocalDateTime.now(), orderItems, totalPrice, AuditInfo())
+    constructor(
+        userId: Long,
+        status: OrderStatus,
+        issueCouponId: Long?,
+        orderDateTime: LocalDateTime,
+        orderItems: OrderItems,
+        totalPrice: BigDecimal
+    )
+            : this(0, userId, status, issueCouponId, orderDateTime, orderItems, totalPrice, AuditInfo())
 
-    val productQuantityPairs = orderItems.productQuantityPairs
+    companion object {
+        fun create(userId: Long, issueCouponId: Long?, orderItems: OrderItems, totalPrice: BigDecimal): Order {
+            return Order(
+                userId = userId,
+                status = OrderStatus.CREATED,
+                issueCouponId = issueCouponId,
+                orderDateTime = LocalDateTime.now(),
+                orderItems = orderItems,
+                totalPrice = totalPrice,
+            )
+        }
+    }
+
+    fun completePayment() {
+        status = OrderStatus.PAID
+    }
 }
