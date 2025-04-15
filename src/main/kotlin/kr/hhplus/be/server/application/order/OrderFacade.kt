@@ -31,24 +31,24 @@ class OrderFacade(
         //3. 할인 전락 구현체 조회
         val discountStrategy = discountStrategyFactory.create(coupon)
 
-        //3. 주문 생성
+        //4. 주문 생성
         val order = orderService.create(criteria.toOrderCommand(discountStrategy))
 
-        //4. 금액 차감
+        //5. 금액 차감
         userCashService.use(criteria.userId, order.totalPrice)
 
-        //5. 재고 감소
+        //6. 재고 감소
         productService.decreaseStock(criteria.toProductQuantities())
 
-        //6. 쿠폰 있으면 쿠폰 사용
+        //7. 쿠폰 있으면 쿠폰 사용
         coupon?.let {
             couponService.use(criteria.issueCouponId)
         }
 
-        //7. 주문 상태 결제 완료로 변경
+        //8. 주문 상태 결제 완료로 변경
         orderService.completePayment(order.id)
 
-        //8. 결제 정보 저장
+        //9. 결제 정보 저장
         val payment = paymentService.pay(Payment(criteria.userId, order.id, order.totalPrice))
 
         return OrderCompletedResult.from(order, payment)

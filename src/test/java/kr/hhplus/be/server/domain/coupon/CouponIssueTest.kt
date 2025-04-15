@@ -51,11 +51,11 @@ class CouponIssueTest {
 
     @DisplayName("쿠폰이 사용가능 상태인지 확인한다")
     @Test
-    fun isActive() {
+    fun isCouponValid() {
         val couponIssue1 = CouponIssue(1L, 10L, CouponStatus.ACTIVE)
         val couponIssue2 = CouponIssue(1L, 10L, CouponStatus.USED)
 
-        assertThat(couponIssue1.isActive()).isTrue()
-        assertThat(couponIssue2.isActive()).isFalse()
+        assertThat(couponIssue1.isCouponValid()).isTrue()
+        assertThat(couponIssue2.isCouponValid()).isFalse()
     }
 }
