@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Test
 
 class CouponTest {
 
-    @DisplayName("쿠폰을 발급하면 쿠폰의 재고가 1 차감된다")
+    @DisplayName("쿠폰을 특정 사용자에게 1매 발급한다")
     @Test
     fun issueCoupon() {
+        val userId = 1L
         val coupon = Coupon(
             name = "10% 할인 쿠폰",
             discountType = DiscountType.PERCENTAGE,
@@ -18,15 +19,17 @@ class CouponTest {
             stock = 100
         )
 
-        coupon.decreaseStock()
+        val issueCoupon = coupon.issueCoupon(userId)
 
         assertThat(coupon.stock).isEqualTo(99)
+        assertThat(issueCoupon).extracting("userId", "couponId", "status")
+            .containsExactly(userId, coupon.id, CouponStatus.ACTIVE)
     }
 
     @DisplayName("쿠폰의 재고가 0일때 발급하면 예외 발생한다")
     @Test
     fun issueCouponException() {
-        // given
+        val userId = 1L
         val coupon = Coupon(
             name = "5천원 할인 쿠폰",
             discountType = DiscountType.FIXED_AMOUNT,
@@ -35,6 +38,6 @@ class CouponTest {
         )
 
         assertThatIllegalStateException()
-            .isThrownBy { coupon.decreaseStock() }
+            .isThrownBy { coupon.issueCoupon(userId) }
     }
 }

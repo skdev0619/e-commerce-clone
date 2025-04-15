@@ -18,7 +18,7 @@ class OrderItemsTest {
             )
         )
 
-        val totalPrice = items.originTotalPrice()
+        val totalPrice = items.totalPrice()
 
         assertThat(totalPrice).isEqualTo(BigDecimal(3_5000))
     }
@@ -33,7 +33,7 @@ class OrderItemsTest {
         )
         val discountStrategy = FixedDiscountStrategy(5_000)
 
-        val price = items.calculatePrice(discountStrategy)
+        val price = items.calculateDiscountPrice(discountStrategy)
 
         assertThat(price).isEqualTo(BigDecimal(5_000))
 

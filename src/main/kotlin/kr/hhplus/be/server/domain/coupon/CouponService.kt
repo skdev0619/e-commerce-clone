@@ -1,16 +1,31 @@
 package kr.hhplus.be.server.domain.coupon
 
+import kr.hhplus.be.server.coupon.domain.Coupon
 import org.springframework.stereotype.Service
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 @Service
-class CouponIssueService(
+class CouponService(
     private val couponRepository: CouponRepository,
     private val couponIssueRepository: CouponIssueRepository
 ) {
-    private val lock = ReentrantLock()
 
+    fun findActiveCouponByIssueId(issueCouponId: Long): Coupon? {
+        return couponIssueRepository.findById(issueCouponId)
+            ?.takeIf { it.isCouponValid() }
+            ?.couponId
+            ?.let { couponRepository.findById(it) }
+    }
+
+    fun use(issueCouponId: Long) {
+        val couponIssue = couponIssueRepository.findById(issueCouponId)
+        couponIssue?.let {
+            couponIssue.use()
+        }
+    }
+
+    private val lock = ReentrantLock()
     fun issue(userId: Long, couponId: Long): CouponIssue {
         lock.withLock {
             val coupon = couponRepository.findById(couponId)
@@ -20,9 +35,8 @@ class CouponIssueService(
                 throw IllegalStateException("이미 발급된 쿠폰입니다")
             }
 
-            coupon.decreaseStock()
+            val issuedCoupon = coupon.issueCoupon(userId)
 
-            val issuedCoupon = CouponIssue(userId, couponId, CouponStatus.ACTIVE)
             couponIssueRepository.save(issuedCoupon)
 
             return issuedCoupon

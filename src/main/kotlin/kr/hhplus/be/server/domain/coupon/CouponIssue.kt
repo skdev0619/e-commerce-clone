@@ -28,7 +28,7 @@ class CouponIssue(
         auditInfo.update()
     }
 
-    fun isActive(): Boolean {
+    fun isCouponValid(): Boolean {
         return status == CouponStatus.ACTIVE
     }
 }

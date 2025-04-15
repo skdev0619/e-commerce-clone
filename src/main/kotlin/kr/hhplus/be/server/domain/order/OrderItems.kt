@@ -6,12 +6,12 @@ import java.math.BigDecimal
 class OrderItems(
     val items: List<OrderItem>
 ) {
-    fun originTotalPrice(): BigDecimal {
+    fun totalPrice(): BigDecimal {
         return items.sumOf { it.amount() }
     }
 
-    fun calculatePrice(discountStrategy: DiscountStrategy): BigDecimal {
-        val totalPrice = originTotalPrice()
+    fun calculateDiscountPrice(discountStrategy: DiscountStrategy): BigDecimal {
+        val totalPrice = totalPrice()
         val discountTotalPrice = discountStrategy.applyDiscount(totalPrice)
         return discountTotalPrice
     }
