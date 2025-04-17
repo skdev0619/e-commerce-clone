@@ -1,14 +1,25 @@
 package kr.hhplus.be.server.domain.coupon
 
-import kr.hhplus.be.server.domain.common.AuditInfo
+import jakarta.persistence.*
+import kr.hhplus.be.server.domain.common.BaseEntity
 
+@Entity
 class CouponIssue(
-    val id: Long,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
+
+    @Column(nullable = false)
     val userId: Long,
+
+    @Column(nullable = false)
     val couponId: Long,
+
+    @Enumerated(EnumType.STRING)
     var status: CouponStatus,
-    val auditInfo: AuditInfo = AuditInfo()
-) {
+
+    ) : BaseEntity() {
+
     constructor(userId: Long, couponId: Long, status: CouponStatus)
             : this(0L, userId, couponId, status)
 
@@ -17,7 +28,6 @@ class CouponIssue(
             throw IllegalStateException("쿠폰의 직전 상태는 사용 가능이어야 합니다.")
         }
         status = CouponStatus.USED
-        auditInfo.update()
     }
 
     fun expired() {
@@ -25,7 +35,6 @@ class CouponIssue(
             throw IllegalStateException("쿠폰의 직전 상태는 사용 가능이어야 합니다.")
         }
         status = CouponStatus.EXPIRED
-        auditInfo.update()
     }
 
     fun isCouponValid(): Boolean {

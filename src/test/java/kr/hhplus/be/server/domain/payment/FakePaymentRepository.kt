@@ -11,4 +11,8 @@ class FakePaymentRepository : PaymentRepository {
         payments.put(payment.id, payment)
         return payment
     }
+
+    override fun findById(id: Long): Payment? {
+        return payments.get(id)
+    }
 }

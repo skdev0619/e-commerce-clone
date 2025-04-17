@@ -19,7 +19,7 @@ class CouponTest {
             stock = 100
         )
 
-        val issueCoupon = coupon.issueCoupon(userId)
+        val issueCoupon = coupon.issue(userId)
 
         assertThat(coupon.stock).isEqualTo(99)
         assertThat(issueCoupon).extracting("userId", "couponId", "status")
@@ -38,6 +38,6 @@ class CouponTest {
         )
 
         assertThatIllegalStateException()
-            .isThrownBy { coupon.issueCoupon(userId) }
+            .isThrownBy { coupon.issue(userId) }
     }
 }

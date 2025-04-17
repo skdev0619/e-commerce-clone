@@ -2,15 +2,16 @@ package kr.hhplus.be.server.domain.coupon
 
 import kr.hhplus.be.server.coupon.domain.Coupon
 import org.springframework.stereotype.Service
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
+import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @Service
 class CouponService(
     private val couponRepository: CouponRepository,
     private val couponIssueRepository: CouponIssueRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun findActiveCouponByIssueId(issueCouponId: Long): Coupon? {
         return couponIssueRepository.findById(issueCouponId)
             ?.takeIf { it.isCouponValid() }
@@ -25,21 +26,24 @@ class CouponService(
         }
     }
 
-    private val lock = ReentrantLock()
     fun issue(userId: Long, couponId: Long): CouponIssue {
-        lock.withLock {
-            val coupon = couponRepository.findById(couponId)
-                ?: throw NoSuchElementException("존재하지 않는 쿠폰입니다")
+        val coupon = couponRepository.findById(couponId)
+            ?: throw NoSuchElementException("존재하지 않는 쿠폰입니다")
 
-            couponIssueRepository.findByUserIdAndCouponId(userId, couponId)?.let {
-                throw IllegalStateException("이미 발급된 쿠폰입니다")
-            }
-
-            val issuedCoupon = coupon.issueCoupon(userId)
-
-            couponIssueRepository.save(issuedCoupon)
-
-            return issuedCoupon
+        couponIssueRepository.findByUserIdAndCouponId(userId, couponId)?.let {
+            throw IllegalStateException("이미 발급된 쿠폰입니다")
         }
+
+        val issuedCoupon = coupon.issue(userId)
+
+        couponIssueRepository.save(issuedCoupon)
+
+        return issuedCoupon
     }
+
+    @Transactional(readOnly = true)
+    fun findMyCoupons(userId: Long): List<CouponIssue> {
+        return couponIssueRepository.findByUserId(userId)
+    }
+
 }

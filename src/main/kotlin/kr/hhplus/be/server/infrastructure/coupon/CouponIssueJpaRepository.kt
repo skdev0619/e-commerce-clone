@@ -1,24 +1,10 @@
 package kr.hhplus.be.server.infrastructure.coupon
 
 import kr.hhplus.be.server.domain.coupon.CouponIssue
-import kr.hhplus.be.server.domain.coupon.CouponIssueRepository
-import org.springframework.stereotype.Repository
+import org.springframework.data.jpa.repository.JpaRepository
 
-@Repository
-class CouponIssueJpaRepository : CouponIssueRepository {
-    override fun save(issue: CouponIssue): CouponIssue {
-        TODO("Not yet implemented")
-    }
-
-    override fun findById(id: Long): CouponIssue? {
-        TODO("Not yet implemented")
-    }
-
-    override fun findByUserId(userId: Long): List<CouponIssue> {
-        TODO("Not yet implemented")
-    }
-
-    override fun findByUserIdAndCouponId(userId: Long, couponId: Long): CouponIssue? {
-        TODO("Not yet implemented")
-    }
+interface CouponIssueJpaRepository : JpaRepository<CouponIssue, Long> {
+    fun findByUserId(id: Long): List<CouponIssue>
+    fun findByUserIdAndCouponId(userId: Long, couponId: Long): CouponIssue?
+    fun findByCouponId(couponId: Long): List<CouponIssue>
 }

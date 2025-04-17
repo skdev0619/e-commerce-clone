@@ -49,7 +49,7 @@ class OrderFacade(
         orderService.completePayment(order.id)
 
         //9. 결제 정보 저장
-        val payment = paymentService.pay(Payment(criteria.userId, order.id, order.totalPrice))
+        val payment = paymentService.pay(Payment(order.id, order.totalPrice))
 
         return OrderCompletedResult.from(order, payment)
     }

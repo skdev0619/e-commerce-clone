@@ -21,4 +21,8 @@ class FakeCouponIssueRepository : CouponIssueRepository {
     override fun findByUserIdAndCouponId(userId: Long, couponId: Long): CouponIssue? {
         return couponIssues.values.find { it.userId == userId && it.couponId == couponId }
     }
+
+    override fun findByCouponId(couponId: Long): List<CouponIssue> {
+        return couponIssues.values.filter { it.couponId == couponId }
+    }
 }

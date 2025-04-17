@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 class UserCashQueryService(
     private val userCashService: UserCashService
 ) {
-
     fun findByUserId(userId: Long): UserCashViewResult {
         val cash = userCashService.findByUserId(userId)
         return UserCashViewResult(cash.id, cash.userId, cash.balance)
