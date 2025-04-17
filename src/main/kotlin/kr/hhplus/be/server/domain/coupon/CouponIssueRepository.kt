@@ -5,4 +5,5 @@ interface CouponIssueRepository {
     fun findById(id: Long): CouponIssue?
     fun findByUserId(userId: Long): List<CouponIssue>
     fun findByUserIdAndCouponId(userId: Long, couponId: Long): CouponIssue?
+    fun findByCouponId(couponId: Long): List<CouponIssue>
 }
