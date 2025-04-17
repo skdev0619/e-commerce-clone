@@ -12,14 +12,13 @@ class PaymentServiceTest {
     @DisplayName("결제 내역 정보를 저장한다")
     @Test
     fun pay() {
-        val userId = 1L
         val orderId = 5L
         val orderPrice = BigDecimal(20_000)
 
-        val payment = paymentService.pay(Payment(userId, orderId, orderPrice))
+        val payment = paymentService.pay(Payment(orderId, orderPrice))
 
         assertThat(payment)
-            .extracting("userId", "orderId", "amount")
-            .containsExactly(userId, orderId, orderPrice)
+            .extracting("orderId", "amount")
+            .containsExactly(orderId, orderPrice)
     }
 }

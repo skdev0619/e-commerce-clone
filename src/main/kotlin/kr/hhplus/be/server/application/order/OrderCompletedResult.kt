@@ -16,7 +16,7 @@ data class OrderCompletedResult(
     val userId: Long,
     var status: String,
     val issueCouponId: Long?,
-    val orderDateTime: LocalDateTime,
+    val paidDate: LocalDateTime?,
     val orderItems: List<OrderItemResult>,
     val totalPrice: BigDecimal,
     val paymentId: Long
@@ -29,8 +29,8 @@ data class OrderCompletedResult(
                 order.id,
                 order.userId,
                 order.status.name,
-                order.issueCouponId,
-                order.orderDateTime,
+                order.couponIssueId,
+                order.paidDate,
                 items,
                 order.totalPrice,
                 payment.id
