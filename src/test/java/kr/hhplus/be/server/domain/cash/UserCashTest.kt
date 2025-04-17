@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.cash
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -58,7 +57,7 @@ class UserCashTest {
         fun useByOverAmount() {
             val userCash = UserCash(11L, 1_000)
 
-            assertThatIllegalArgumentException()
+            assertThatIllegalStateException()
                 .isThrownBy { userCash.use(BigDecimal(1_001)) }
                 .withMessage("잔액이 부족합니다")
         }
