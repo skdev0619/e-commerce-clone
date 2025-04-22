@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
-import java.time.LocalDateTime
 
 class OrderServiceTest {
     private val orderRepository = FakeOrderRepository()
@@ -15,21 +14,21 @@ class OrderServiceTest {
     @Test
     fun createOrder() {
         val userId = 1L
-        val issueCouponId = null
+        val couponIssueId = null
         val items = OrderItems(
             listOf(
                 OrderItem(productId = 1L, price = BigDecimal(10_000), quantity = 2)
             )
         )
         val discountStrategy = FixedDiscountStrategy(5_000)
-        val command = OrderCommand(userId, items, issueCouponId, discountStrategy)
+        val command = OrderCommand(userId, items, couponIssueId, discountStrategy)
 
         val order = orderService.create(command)
 
         assertThat(order)
-            .extracting("userId", "status", "issueCouponId", "orderItems", "totalPrice")
+            .extracting("userId", "status", "couponIssueId", "orderItems", "totalPrice")
             .containsExactly(
-                userId, OrderStatus.CREATED, issueCouponId, items, BigDecimal(15_000)
+                userId, OrderStatus.CREATED, couponIssueId, items, BigDecimal(15_000)
             )
     }
 
@@ -48,6 +47,12 @@ class OrderServiceTest {
         val orderItems = OrderItems(listOf(OrderItem(3L, 5, BigDecimal(1_000))))
         val totalPrice = BigDecimal(5_000)
 
-        return Order(1L, status, 5L, LocalDateTime.now(), orderItems, totalPrice)
+        return Order(
+            userId = 1L,
+            status = OrderStatus.CREATED,
+            couponIssueId = null,
+            orderItems = orderItems,
+            totalPrice = totalPrice
+        )
     }
 }

@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.product
 
-import kr.hhplus.be.server.application.product.ProductViewResult
 import kr.hhplus.be.server.domain.product.FakeProductRepository
 import kr.hhplus.be.server.domain.product.Product
 import org.assertj.core.api.Assertions.assertThat

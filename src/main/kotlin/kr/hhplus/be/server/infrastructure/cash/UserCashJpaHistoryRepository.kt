@@ -1,17 +1,8 @@
 package kr.hhplus.be.server.infrastructure.cash
 
 import kr.hhplus.be.server.domain.cash.UserCashHistory
-import kr.hhplus.be.server.domain.cash.UserCashHistoryRepository
-import org.springframework.stereotype.Repository
+import org.springframework.data.jpa.repository.JpaRepository
 
-@Repository
-class UserCashJpaHistoryRepository : UserCashHistoryRepository {
-
-    override fun save(history: UserCashHistory): UserCashHistory {
-        TODO("Not yet implemented")
-    }
-
-    override fun findByUserId(userId: Long): List<UserCashHistory> {
-        TODO("Not yet implemented")
-    }
+interface UserCashJpaHistoryRepository : JpaRepository<UserCashHistory, Long> {
+    fun findByUserId(userId: Long): List<UserCashHistory>
 }

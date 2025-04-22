@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.ranking
+package kr.hhplus.be.server.interfaces.ranking
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import kr.hhplus.be.server.ranking.dto.TopSellingProductResponse
+
 import org.springframework.http.ResponseEntity
 
 @Tag(name = "Ranking", description = "랭킹 관련 API")
@@ -22,7 +22,7 @@ interface RankingApiSpecification {
                 content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = TopSellingProductResponse::class),
+                        schema = Schema(implementation = TopSellingProductsResponse::class),
                         examples = [
                             ExampleObject(
                                 name = "성공 응답 예시",
@@ -44,5 +44,5 @@ interface RankingApiSpecification {
             )
         ]
     )
-    fun topSellingProducts(): ResponseEntity<TopSellingProductResponse>
+    fun topSellingProducts(request: TopSellingProductsRequest): ResponseEntity<List<TopSellingProductsResponse>>
 }

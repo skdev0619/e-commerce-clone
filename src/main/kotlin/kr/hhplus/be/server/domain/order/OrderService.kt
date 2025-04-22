@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.domain.order
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @Service
 class OrderService(
     private val orderRepository: OrderRepository
@@ -9,7 +11,7 @@ class OrderService(
     fun create(command: OrderCommand): Order {
         val order = Order.create(
             userId = command.userId,
-            issueCouponId = command.couponIssueId,
+            couponIssueId = command.couponIssueId,
             orderItems = command.orderItems
         )
 

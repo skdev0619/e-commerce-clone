@@ -1,14 +1,17 @@
 package kr.hhplus.be.server.domain.cash
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
+@Transactional
 @Service
 class UserCashService(
     private val userCashRepository: UserCashRepository,
     private val userCashHistoryRepository: UserCashHistoryRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun findByUserId(userId: Long): UserCash {
         return userCashRepository.findByUserId(userId)
             ?: throw NoSuchElementException("해당 사용자의 잔액이 존재하지 않습니다")

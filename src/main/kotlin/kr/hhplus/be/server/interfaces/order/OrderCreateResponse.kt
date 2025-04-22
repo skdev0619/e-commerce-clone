@@ -10,7 +10,7 @@ data class OrderCreateResponse(
     val userId: Long,
     var status: String,
     val issueCouponId: Long?,
-    val orderDateTime: LocalDateTime,
+    val paidDate: LocalDateTime?,
     val orderItems: List<OrderItemResult>,
     val totalPrice: BigDecimal,
     val paymentId: Long
@@ -22,7 +22,7 @@ data class OrderCreateResponse(
                 result.userId,
                 result.status,
                 result.issueCouponId,
-                result.orderDateTime,
+                result.paidDate,
                 result.orderItems,
                 result.totalPrice,
                 result.paymentId
