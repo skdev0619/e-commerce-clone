@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class CouponRepositoryImpl(
     private val jpaRepository: CouponJpaRepository
-): CouponRepository {
+) : CouponRepository {
 
     override fun save(coupon: Coupon): Coupon {
         return jpaRepository.save(coupon)
@@ -16,5 +16,9 @@ class CouponRepositoryImpl(
 
     override fun findById(id: Long): Coupon? {
         return jpaRepository.findByIdOrNull(id)
+    }
+
+    override fun findByIdWithLock(id: Long): Coupon? {
+        return jpaRepository.findByIdWithLock(id)
     }
 }

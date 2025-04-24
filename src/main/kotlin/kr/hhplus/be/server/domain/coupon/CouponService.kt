@@ -27,7 +27,7 @@ class CouponService(
     }
 
     fun issue(userId: Long, couponId: Long): CouponIssue {
-        val coupon = couponRepository.findById(couponId)
+        val coupon = couponRepository.findByIdWithLock(couponId)
             ?: throw NoSuchElementException("존재하지 않는 쿠폰입니다")
 
         couponIssueRepository.findByUserIdAndCouponId(userId, couponId)?.let {
