@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.product
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.groups.Tuple
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -45,7 +46,7 @@ class ProductServiceTest {
 
     @DisplayName("상품 id-재고 쌍 목록을 전달하여 특정 상품의 재고를 감소한다")
     @Test
-    fun multiDecreaseStock(){
+    fun multiDecreaseStock() {
         val product1 = productRepository.save(createProduct(1L, 10))
         val product2 = productRepository.save(createProduct(2L, 10))
 
@@ -58,6 +59,22 @@ class ProductServiceTest {
 
         assertThat(product1.stock).isEqualTo(5)
         assertThat(product2.stock).isEqualTo(4)
+    }
+
+    @DisplayName("식별자 리스트로 상품목록을 조회한다")
+    @Test
+    fun findByIdIn() {
+        productRepository.save(Product(56L, "상품1", BigDecimal(1_000), 100))
+        productRepository.save(Product(57L, "상품2", BigDecimal(1_100), 90))
+
+        val products = productService.findByIdIn(listOf(56L, 57L))
+
+        assertThat(products).hasSize(2)
+        assertThat(products).extracting("id", "name", "price", "stock")
+            .containsExactly(
+                Tuple.tuple(56L, "상품1", BigDecimal(1_000), 100),
+                Tuple.tuple(57L, "상품2", BigDecimal(1_100), 90)
+            )
     }
 
     private fun createProduct(id: Long, stock: Int): Product {

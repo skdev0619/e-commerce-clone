@@ -23,7 +23,7 @@ class ProductService(
 
     fun decreaseStock(productQuantities: List<ProductQuantity>) {
         val productIds = productQuantities.map { it.productId }
-        val products = productRepository.findByIdIn(productIds)
+        val products = productRepository.findByIdInWithLock(productIds)
 
         for (product in products) {
             productQuantities.find { it.productId == product.id }?.let {
@@ -31,5 +31,10 @@ class ProductService(
                 product.decreaseStock(quantity)
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    fun findByIdIn(ids: List<Long>): List<Product> {
+        return productRepository.findByIdIn(ids)
     }
 }

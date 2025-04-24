@@ -5,4 +5,5 @@ interface ProductRepository {
     fun findById(id: Long): Product?
     fun findAll(): List<Product>
     fun findByIdIn(ids: List<Long>): List<Product>
+    fun findByIdInWithLock(ids: List<Long>): List<Product>
 }
