@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity
 @Tag(name = "Order", description = "주문 관련 API")
 interface OrderApiSpecification {
 
-    @Operation(summary = "주문 생성", description = "사용자 id와 주문 내역을 입력받아 주문 생성한다")
+    @Operation(summary = "주문 결제 요청", description = "사용자 id와 주문 내역을 입력받아 주문 생성하고 결제를 진행한다")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -28,13 +28,13 @@ interface OrderApiSpecification {
                         {
                             "id": 1,
                             "userId" : 5,
-                            "status" : CREATED,
+                            "status" : "PAID",
                             "issueCouponId" : 5,
-                            "orderDateTime" : 2025-04-11 04:40:05,
-                            "items": {[
+                            "paidDate" : "2025-04-11 04:40:05",
+                            "orderItems": [
                                 { "productId": 1, "quantity": 1, "price": 10000 },
                                 { "productId": 2, "quantity": 2, "price": 30000 }
-                            ]},
+                            ],
                             "totalPrice": 70000,
                             "paymentId": 2
                         }
@@ -91,12 +91,12 @@ interface OrderApiSpecification {
                     name = "요청 예시",
                     value = """
                     {
-                        "userId": 7,
-                        "items": [
+                        "userId": 3,
+                        "orderItems": [
                             { "productId": 1, "quantity": 1, "price" : 10000 },
                             { "productId": 2, "quantity": 2, "price" : 20000 }
                         ],
-                        "couponId": "11"
+                        "issueCouponId": "3"
                     }
                     """
                 )]
