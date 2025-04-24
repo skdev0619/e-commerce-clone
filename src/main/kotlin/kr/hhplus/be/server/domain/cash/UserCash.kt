@@ -16,7 +16,10 @@ class UserCash(
     @Column(nullable = false)
     var balance: BigDecimal,
 
-    ) : BaseEntity() {
+    @Version
+    val version: Int = 0
+
+) : BaseEntity() {
     constructor(userId: Long, balance: Int) : this(0L, userId, BigDecimal(balance))
 
     fun charge(amount: BigDecimal) {
