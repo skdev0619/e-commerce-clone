@@ -1,19 +1,21 @@
 package kr.hhplus.be.server.domain.order
 
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Service
 class OrderSummaryService(
     private val orderSummaryRepository: OrderSummaryRepository
 ) {
-    fun findTopSellingProducts(
-        startDate: LocalDateTime,
-        endDate: LocalDateTime,
-        limit: Int
+    @Transactional(readOnly = true)
+    fun getProductSalesCountBy(
+        baseDate: LocalDate
     ): List<OrderProductSalesInfo> {
-        val pageable = Pageable.ofSize(limit)
-        return orderSummaryRepository.findTopSellingProducts(startDate, endDate, pageable)
+        val startOfDay = baseDate.atStartOfDay()
+        val endOfDay = baseDate.atTime(LocalTime.MAX)
+        return orderSummaryRepository.getProductSalesCountBy(startOfDay, endOfDay)
     }
 }
+
