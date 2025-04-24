@@ -33,7 +33,7 @@ class CouponControllerTest {
     fun issueCoupon() {
         val userId = 1L
         val couponId = 5L
-        val result = CouponIssueResult(1L, userId, couponId)
+        val result = CouponIssueResult(1L, userId, couponId, "10할인", "PERCENTAGE", 10, "ACTIVE")
 
         `when`(firstComeCouponIssueService.issuedCoupon(userId, couponId)).thenReturn(result)
 
