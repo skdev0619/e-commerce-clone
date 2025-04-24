@@ -4,6 +4,11 @@ import jakarta.persistence.*
 import kr.hhplus.be.server.domain.common.BaseEntity
 
 @Entity
+@Table(
+    uniqueConstraints = [
+        UniqueConstraint(name = "coupon_issue_unique", columnNames = ["user_id", "coupon_id"])
+    ]
+)
 class CouponIssue(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
