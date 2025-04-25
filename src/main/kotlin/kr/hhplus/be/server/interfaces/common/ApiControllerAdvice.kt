@@ -8,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 data class ErrorResponse(val code: Int, val message: String)
 
-//@RestControllerAdvice
+@RestControllerAdvice
 class ApiControllerAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(IllegalArgumentException::class)
