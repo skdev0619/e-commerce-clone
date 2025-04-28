@@ -15,4 +15,8 @@ class FakeCouponRepository : CouponRepository {
     override fun findById(id: Long): Coupon? {
         return coupons.get(id)
     }
+
+    override fun findByIdWithLock(id: Long): Coupon? {
+        return findById(id)
+    }
 }

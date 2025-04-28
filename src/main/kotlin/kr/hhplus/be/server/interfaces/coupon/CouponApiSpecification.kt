@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.interfaces.coupon
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
@@ -21,7 +22,19 @@ interface CouponApiSpecification {
                 content = [Content(
                     mediaType = "application/json",
                     schema = Schema(implementation = IssueCouponResponse::class),
-                    examples = [ExampleObject(value = "{\"id\": 11, \"name\": \"1000원 할인\", \"discountType\": \"FIXED_AMOUNT\", \"discountValue\": 1000, \"minOrderAmount\": 10000, \"maxDiscountAmount\": 1000, \"expiredDate\": \"2025-12-31T23:59:00\"}")]
+                    examples = [ExampleObject(
+                        value = """
+                        {
+                            "id": 5,
+                            "userId": 1,
+                            "couponId": 1,
+                            "name": "10%할인",
+                            "discountType": "PERCENTAGE",
+                            "discountValue": 10,
+                            "status": "ACTIVE"
+                        }
+                        """
+                    )]
                 )]
             ),
             ApiResponse(
@@ -42,7 +55,10 @@ interface CouponApiSpecification {
             )
         ]
     )
-    fun issue(couponId: Long, userId: Long): ResponseEntity<IssueCouponResponse>
+    fun issue(
+        @Parameter(description = "발급받을 쿠폰의 ID", example = "1") couponId: Long,
+        @Parameter(description = "사용자 ID", example = "1") userId: Long
+    ): ResponseEntity<IssueCouponResponse>
 
     @Operation(summary = "쿠폰 목록 조회", description = "사용자가 보유한 쿠폰목록을 조회한다")
     @ApiResponses(
@@ -53,10 +69,41 @@ interface CouponApiSpecification {
                 content = [Content(
                     mediaType = "application/json",
                     schema = Schema(implementation = MyCouponResponse::class),
-                    examples = [ExampleObject(value = "[{\"id\": 11, \"name\": \"1000원 할인\", \"discountType\": \"FIXED_AMOUNT\", \"discountValue\": 1000, \"minOrderAmount\": 10000, \"maxDiscountAmount\": 1000, \"status\": \"ACTIVE\", \"expiredDate\": \"2025-12-31T23:59:00\"}]")]
+                    examples = [
+                        ExampleObject(
+                            name = "쿠폰 리스트 예시",
+                            value = """
+                            [
+                              {
+                                "id": 1,
+                                "userId": 2,
+                                "couponId": 1,
+                                "status": "ACTIVE"
+                              },
+                              {
+                                "id": 2,
+                                "userId": 2,
+                                "couponId": 2,
+                                "status": "USED"
+                              },
+                              {
+                                "id": 3,
+                                "userId": 2,
+                                "couponId": 3,
+                                "status": "EXPIRED"
+                              }
+                            ]
+                            """
+                        )
+                    ]
                 )]
             )
         ]
     )
-    fun coupons(userId: Long): ResponseEntity<List<MyCouponResponse>>
+    fun coupons(
+        @Parameter(
+            description = "조회할 사용자 ID",
+            example = "2"
+        ) userId: Long
+    ): ResponseEntity<List<MyCouponResponse>>
 }

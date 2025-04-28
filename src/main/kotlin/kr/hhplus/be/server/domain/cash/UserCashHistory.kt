@@ -5,6 +5,11 @@ import kr.hhplus.be.server.domain.common.BaseEntity
 import java.math.BigDecimal
 
 @Entity
+@Table(
+    indexes = [
+        Index(name = "idx_user_id", columnList = "userId")
+    ]
+)
 class UserCashHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

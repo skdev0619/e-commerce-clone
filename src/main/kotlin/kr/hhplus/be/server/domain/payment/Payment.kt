@@ -16,7 +16,6 @@ class Payment(
     @Column(nullable = false)
     val amount: BigDecimal,
 
-
     ) : BaseEntity() {
 
     constructor(orderId: Long, amount: BigDecimal)

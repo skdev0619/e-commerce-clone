@@ -26,8 +26,8 @@ class CouponService(
         }
     }
 
-    fun issue(userId: Long, couponId: Long): CouponIssue {
-        val coupon = couponRepository.findById(couponId)
+    fun issue(userId: Long, couponId: Long): CouponIssueInfo {
+        val coupon = couponRepository.findByIdWithLock(couponId)
             ?: throw NoSuchElementException("존재하지 않는 쿠폰입니다")
 
         couponIssueRepository.findByUserIdAndCouponId(userId, couponId)?.let {
@@ -38,7 +38,14 @@ class CouponService(
 
         couponIssueRepository.save(issuedCoupon)
 
-        return issuedCoupon
+        return CouponIssueInfo(
+            issuedCoupon.id,
+            userId, couponId,
+            coupon.name,
+            coupon.discountType,
+            coupon.discountValue,
+            issuedCoupon.status
+        )
     }
 
     @Transactional(readOnly = true)

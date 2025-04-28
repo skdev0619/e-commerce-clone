@@ -85,7 +85,7 @@ interface CashApiSpecification {
             )
         ]
     )
-    fun point(@Parameter(description = "조회할 사용자 ID", example = "101") id: Long): ResponseEntity<CashViewResponse>
+    fun point(@Parameter(description = "조회할 사용자 ID", example = "1") id: Long): ResponseEntity<CashViewResponse>
 
     @Operation(summary = "캐시 충전", description = "특정 사용자의 캐시 잔액을 충전한다")
     @ApiResponses(
@@ -182,7 +182,7 @@ interface CashApiSpecification {
         ]
     )
     fun charge(
-        @Parameter(description = "충전할 사용자 ID", example = "11") id: Long,
+        @Parameter(description = "충전할 사용자 ID", example = "1") id: Long,
         @RequestBody(
             description = "충전할 금액",
             required = true,

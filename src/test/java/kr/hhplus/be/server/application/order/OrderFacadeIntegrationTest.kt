@@ -120,7 +120,7 @@ class OrderFacadeIntegrationTest {
         userCashRepository.save(UserCash(userId, 10_000))
         val orderItems = listOf(OrderItemCommand(product.id, quantity = productQuantityRequest, price = 10_000))
 
-        assertThrows<IllegalArgumentException> {
+        assertThrows<IllegalStateException> {
             orderFacade.createOrder(OrderCriteria(userId, orderItems, null))
         }
     }

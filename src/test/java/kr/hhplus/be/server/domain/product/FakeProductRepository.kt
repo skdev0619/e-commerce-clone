@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class FakeProductRepository : ProductRepository {
 
-    val products = ConcurrentHashMap<Long, Product>()
+    private val products = ConcurrentHashMap<Long, Product>()
 
     override fun save(product: Product): Product {
         products.put(product.id, product)
@@ -21,5 +21,9 @@ class FakeProductRepository : ProductRepository {
 
     override fun findByIdIn(ids: List<Long>): List<Product> {
         return products.values.filter { ids.contains(it.id) }
+    }
+
+    override fun findByIdInWithLock(ids: List<Long>): List<Product> {
+        return findByIdIn(ids)
     }
 }

@@ -22,7 +22,7 @@ class UserCashQueryServiceIntegrationTest {
     @DisplayName("특정 유저의 현재 잔액을 조회한다")
     @Test
     fun getBalance() {
-        val userId = 1L
+        val userId = 196L
         userCashRepository.save(UserCash(userId, 5_000))
 
         val userCashView = userCashQueryService.findByUserId(userId)
