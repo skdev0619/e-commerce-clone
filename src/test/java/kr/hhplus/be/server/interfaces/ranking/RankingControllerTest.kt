@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.interfaces.ranking
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kr.hhplus.be.server.application.ranking.TopSellingProductsQueryResult
-import kr.hhplus.be.server.application.ranking.TopSellingProductsQueryService
+import kr.hhplus.be.server.application.ranking.BestSellingProductsQueryService
+import kr.hhplus.be.server.application.ranking.BestSellingProductsResult
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -13,7 +13,8 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
-import java.time.LocalDateTime
+import java.math.BigDecimal
+import java.time.LocalDate
 
 @WebMvcTest(RankingController::class)
 class RankingControllerTest {
@@ -25,36 +26,43 @@ class RankingControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     @MockitoBean
-    private lateinit var topSellingProductsQueryService: TopSellingProductsQueryService
+    private lateinit var topSellingProductsQueryService: BestSellingProductsQueryService
 
-    @DisplayName("인기 상품 N건을 조회 요청 시, 조회 결과를 반환한다")
+    @DisplayName("특정 기간의 인기 상품 N건을 조회 요청 시, 조회 결과를 반환한다")
     @Test
-    fun topSellingProducts() {
-        val request = TopSellingProductsRequest(
-            LocalDateTime.of(2025, 4, 13, 0, 0),
-            LocalDateTime.of(2025, 4, 15, 23, 59),
+    fun bestSellingProducts() {
+        val request = BestSellingProductsRequest(
+            LocalDate.of(2025, 4, 13),
+            LocalDate.of(2025, 4, 15),
             2
         )
-        val command = TopSellingProductsRequest.from(request)
+        val command = BestSellingProductsRequest.from(request)
         val result = listOf(
-            TopSellingProductsQueryResult(1L, 100),
-            TopSellingProductsQueryResult(2L, 90)
+            BestSellingProductsResult(productId = 1L, salesCount = 100, name = "무지볼캡", price = BigDecimal(15_000)),
+            BestSellingProductsResult(productId = 2L, salesCount = 100, name = "검정버킷햇", price = BigDecimal(17_000))
         )
 
-        `when`(topSellingProductsQueryService.findTopSellingProducts(command))
+        `when`(topSellingProductsQueryService.findBestSellingProducts(command))
             .thenReturn(result)
 
         mockMvc.get("/api/v1/ranking/top-selling-products") {
+            param("startDate", request.startDate.toString())
+            param("endDate", request.endDate.toString())
+            param("limit", request.limit.toString())
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(request)
         }.andExpect {
             status { isOk() }
             jsonPath("$[0].productId") { value(result[0].productId.toInt()) }
-            jsonPath("$[0].sales") { value(result[0].sales.toInt()) }
+            jsonPath("$[0].salesCount") { value(result[0].salesCount.toInt()) }
+            jsonPath("$[0].name") { value(result[0].name) }
+            jsonPath("$[0].price") { value(result[0].price.toInt()) }
+
             jsonPath("$[1].productId") { value(result[1].productId.toInt()) }
-            jsonPath("$[1].sales") { value(result[1].sales.toInt()) }
+            jsonPath("$[1].salesCount") { value(result[1].salesCount.toInt()) }
+            jsonPath("$[1].name") { value(result[1].name) }
+            jsonPath("$[1].price") { value(result[1].price.toInt()) }
         }
 
-        verify(topSellingProductsQueryService).findTopSellingProducts(command)
+        verify(topSellingProductsQueryService).findBestSellingProducts(command)
     }
 }
