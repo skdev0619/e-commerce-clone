@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 @Service
 class OrderLockTemplate(
-    @Qualifier("lettuceDistributedLockManager")
+    @Qualifier("redissonDistributedLockManager")
     private val lockManager: DistributedLockManager,
     private val orderFacade: OrderFacade
 ) {

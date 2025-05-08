@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 @Service
 class FirstComeCouponIssueService(
-    @Qualifier("lettuceDistributedLockManager")
+    @Qualifier("redissonDistributedLockManager")
     private val lockManager: DistributedLockManager,
     private val couponService: CouponService
 ) {
