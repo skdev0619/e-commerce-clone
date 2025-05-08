@@ -23,6 +23,10 @@ class FakeProductRepository : ProductRepository {
         return products.values.filter { ids.contains(it.id) }
     }
 
+    override fun findByIdWithLock(id: Long): Product? {
+        return findById(id)
+    }
+
     override fun findByIdInWithLock(ids: List<Long>): List<Product> {
         return findByIdIn(ids)
     }

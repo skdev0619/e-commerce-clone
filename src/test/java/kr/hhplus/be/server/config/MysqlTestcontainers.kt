@@ -1,4 +1,4 @@
-package kr.hhplus.be.server
+package kr.hhplus.be.server.config
 
 import jakarta.annotation.PreDestroy
 import org.springframework.context.annotation.Configuration
@@ -6,7 +6,7 @@ import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.utility.DockerImageName
 
 @Configuration
-class TestcontainersConfiguration {
+class MysqlTestcontainers {
     @PreDestroy
     fun preDestroy() {
         if (mySqlContainer.isRunning) mySqlContainer.stop()

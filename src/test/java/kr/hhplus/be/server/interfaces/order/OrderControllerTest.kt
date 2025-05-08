@@ -2,9 +2,8 @@ package kr.hhplus.be.server.interfaces.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kr.hhplus.be.server.application.order.OrderCompletedResult
-import kr.hhplus.be.server.application.order.OrderFacade
-
 import kr.hhplus.be.server.application.order.OrderItemResult
+import kr.hhplus.be.server.application.order.OrderLockTemplate
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -28,7 +27,7 @@ class OrderControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     @MockitoBean
-    private lateinit var orderFacade: OrderFacade
+    private lateinit var orderFacade: OrderLockTemplate
 
     @DisplayName("주문 생성 시, 생성된 주문 결과를 반환한다")
     @Test

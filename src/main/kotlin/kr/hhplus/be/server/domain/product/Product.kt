@@ -30,6 +30,5 @@ class Product(
     fun decreaseStock(quantity: Int) {
         validateStock(quantity)
         stock -= quantity
-        //auditInfo.update()
     }
 }
