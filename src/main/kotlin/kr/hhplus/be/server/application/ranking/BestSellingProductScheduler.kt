@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.ranking
 
+import kr.hhplus.be.server.application.cache.CacheTemplate
 import kr.hhplus.be.server.domain.order.OrderSummaryService
 import kr.hhplus.be.server.domain.product.ProductService
 import kr.hhplus.be.server.domain.ranking.BestSellingProduct
@@ -9,6 +10,7 @@ import kr.hhplus.be.server.domain.ranking.DailyProductSaleService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Duration
 import java.time.LocalDate
 
 @Transactional
@@ -17,7 +19,8 @@ class BestSellingProductScheduler(
     private val orderSummaryService: OrderSummaryService,
     private val dailyProductSaleService: DailyProductSaleService,
     private val bestSellingProductService: BestSellingProductService,
-    private val productService: ProductService
+    private val productService: ProductService,
+    private val cacheTemplate: CacheTemplate<String, Any>
 ) {
 
     companion object {
@@ -26,7 +29,9 @@ class BestSellingProductScheduler(
         const val PAGE_SIZE = 5
     }
 
-    @Scheduled(cron = "0 0 2 * * ?")
+    private val cacheVersion = LocalDate.now().plusDays(1).toString()
+
+    @Scheduled(cron = "0 0 22 * * ?")
     fun runScheduled() {
         runDailyTask()
     }
@@ -35,11 +40,28 @@ class BestSellingProductScheduler(
         summaryStartDate: LocalDate = LocalDate.now().minusDays(SUMMARY_START_DAY_OFFSET),
         summaryEndDate: LocalDate = LocalDate.now().minusDays(SUMMARY_END_DAY_OFFSET)
     ) {
+        putFailOverCache()
         val dailyProductSales = getDailyProductSalesBy(summaryEndDate)
         dailyProductSaleService.bulkSave(dailyProductSales)
 
         val bestSellingProducts = getBestSellingProductsBy(summaryStartDate, summaryEndDate, PAGE_SIZE)
         bestSellingProductService.bulkSave(bestSellingProducts)
+        putCache(bestSellingProducts)
+    }
+
+    private fun putFailOverCache() {
+        //집계 시작 전, 현재 캐시 데이터를 failover cache에 담는다
+        val currentVersion = LocalDate.now().toString()
+        val cachedProducts = cacheTemplate.get("best-selling-products:${currentVersion}")
+
+        cachedProducts?.let{
+            val cacheName = "best-selling-products:${cacheVersion}-failover"
+            cacheTemplate.put(cacheName, cachedProducts, Duration.ofHours(26))
+        }
+    }
+
+    private fun putCache(products: List<BestSellingProduct>) {
+        cacheTemplate.put("best-selling-products:${cacheVersion}", products, Duration.ofHours(26))
     }
 
     private fun getDailyProductSalesBy(baseDate: LocalDate): List<DailyProductSale> {

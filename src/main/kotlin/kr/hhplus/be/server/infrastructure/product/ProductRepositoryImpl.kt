@@ -26,6 +26,10 @@ class ProductRepositoryImpl(
         return jpaRepository.findAllById(ids)
     }
 
+    override fun findByIdWithLock(id: Long): Product? {
+        return jpaRepository.findByIdWithLock(id)
+    }
+
     override fun findByIdInWithLock(ids: List<Long>): List<Product> {
         return jpaRepository.findByIdInWithLock(ids)
     }

@@ -20,7 +20,8 @@ data class OrderCriteria(
 ) {
 
     fun toProductQuantities(): List<ProductQuantity> {
-        return orderItems.map {
+        val items = orderItems.sortedBy { it.productId }
+        return items.map {
             ProductQuantity(it.productId, it.quantity)
         }.toList()
     }

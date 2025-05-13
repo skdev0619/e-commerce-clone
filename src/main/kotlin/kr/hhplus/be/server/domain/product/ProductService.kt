@@ -21,15 +21,14 @@ class ProductService(
         }
     }
 
-    fun decreaseStock(productQuantities: List<ProductQuantity>) {
-        val productIds = productQuantities.map { it.productId }
-        val products = productRepository.findByIdInWithLock(productIds)
+    fun decreaseStock(productQuantity: ProductQuantity) {
+        val product = productRepository.findByIdWithLock(productQuantity.productId)
+        product?.decreaseStock(productQuantity.quantity)
+    }
 
-        for (product in products) {
-            productQuantities.find { it.productId == product.id }?.let {
-                val quantity = it.quantity
-                product.decreaseStock(quantity)
-            }
+    fun decreaseStock(productQuantities: List<ProductQuantity>) {
+        for (productQuantity in productQuantities) {
+            decreaseStock(productQuantity)
         }
     }
 
