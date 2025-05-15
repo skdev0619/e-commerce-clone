@@ -18,7 +18,7 @@ class OrderLockTemplate(
 
     fun createOrder(criteria: OrderCriteria): OrderCompletedResult {
         val lockKeys = criteria.toProductQuantities()
-            .map { "product-stoc-:${it.productId}" }
+            .map { "product-stock-:${it.productId}" }
 
         return lockManager.executeWithLocks(
             lockKeys,
