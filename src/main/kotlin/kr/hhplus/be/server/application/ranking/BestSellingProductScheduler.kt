@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.application.ranking
 
 import kr.hhplus.be.server.application.cache.CacheTemplate
-import kr.hhplus.be.server.domain.order.OrderSummaryService
 import kr.hhplus.be.server.domain.product.ProductService
 import kr.hhplus.be.server.domain.ranking.*
 import org.springframework.scheduling.annotation.Scheduled
@@ -13,8 +12,8 @@ import java.time.LocalDate
 @Transactional
 @Service
 class BestSellingProductScheduler(
-    private val orderSummaryService: OrderSummaryService,
-    private val dailyProductSaleAggregateService: DailyProductSaleAggregateService,
+    private val dailyProductSaleRankingService: DailyProductSaleRankingService,
+    private val dailyProductSaleAggregateService : DailyProductSaleAggregateService,
     private val bestSellingProductService: BestSellingProductService,
     private val productService: ProductService,
     private val cacheTemplate: CacheTemplate<String, Any>
@@ -51,7 +50,7 @@ class BestSellingProductScheduler(
         val currentVersion = LocalDate.now().toString()
         val cachedProducts = cacheTemplate.get("best-selling-products:${currentVersion}")
 
-        cachedProducts?.let{
+        cachedProducts?.let {
             val cacheName = "best-selling-products:${cacheVersion}-failover"
             cacheTemplate.put(cacheName, cachedProducts, Duration.ofHours(26))
         }
@@ -62,8 +61,11 @@ class BestSellingProductScheduler(
     }
 
     private fun getDailyProductSalesBy(baseDate: LocalDate): List<DailyProductSale> {
-        val productSalesSummaries = orderSummaryService.getProductSalesCountBy(baseDate)
-        return productSalesSummaries.map { DailyProductSale(baseDate, it.productId, it.sales) }
+        val rankings = dailyProductSaleRankingService.get(baseDate)?.ranking ?: emptyList()
+
+        return rankings.map { it ->
+            DailyProductSale(baseDate, it.productId, it.salesCount)
+        }
     }
 
     private fun getBestSellingProductsBy(
