@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.interfaces.ranking
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import kr.hhplus.be.server.application.ranking.BestSellingProductsQueryService
 import kr.hhplus.be.server.application.ranking.BestSellingProductsResult
+import kr.hhplus.be.server.application.ranking.DailySellingProductsQueryService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -22,11 +22,11 @@ class RankingControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
     @MockitoBean
     private lateinit var topSellingProductsQueryService: BestSellingProductsQueryService
+
+    @MockitoBean
+    private lateinit var dailySellingProductsQueryService: DailySellingProductsQueryService
 
     @DisplayName("특정 기간의 인기 상품 N건을 조회 요청 시, 조회 결과를 반환한다")
     @Test
@@ -64,5 +64,39 @@ class RankingControllerTest {
         }
 
         verify(topSellingProductsQueryService).findBestSellingProducts(command)
+    }
+
+    @DisplayName("특정 일자의 인기 상품 N건을 조회 요청 시, 조회 결과를 반환한다")
+    @Test
+    fun dailyBestSellingProducts() {
+        val baseDate = LocalDate.of(2025, 5, 16)
+        val limit = 2L
+
+        val result = listOf(
+            BestSellingProductsResult(productId = 1L, salesCount = 100, name = "무지볼캡", price = BigDecimal(15_000)),
+            BestSellingProductsResult(productId = 2L, salesCount = 100, name = "검정버킷햇", price = BigDecimal(17_000))
+        )
+
+        `when`(dailySellingProductsQueryService.getRanking(baseDate, limit))
+            .thenReturn(result)
+
+        mockMvc.get("/api/v1/ranking/daily-top-selling-products") {
+            param("baseDate", baseDate.toString())
+            param("limit", limit.toString())
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$[0].productId") { value(result[0].productId.toInt()) }
+            jsonPath("$[0].salesCount") { value(result[0].salesCount.toInt()) }
+            jsonPath("$[0].name") { value(result[0].name) }
+            jsonPath("$[0].price") { value(result[0].price.toInt()) }
+
+            jsonPath("$[1].productId") { value(result[1].productId.toInt()) }
+            jsonPath("$[1].salesCount") { value(result[1].salesCount.toInt()) }
+            jsonPath("$[1].name") { value(result[1].name) }
+            jsonPath("$[1].price") { value(result[1].price.toInt()) }
+        }
+
+        verify(dailySellingProductsQueryService).getRanking(baseDate, limit)
     }
 }

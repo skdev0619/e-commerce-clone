@@ -6,9 +6,11 @@ import kr.hhplus.be.server.domain.order.OrderService
 import kr.hhplus.be.server.domain.payment.Payment
 import kr.hhplus.be.server.domain.payment.PaymentService
 import kr.hhplus.be.server.domain.product.ProductService
+import kr.hhplus.be.server.domain.ranking.DailyProductSaleRankingService
 import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 @Transactional
 @Service
@@ -18,7 +20,8 @@ class OrderFacade(
     private val userCashService: UserCashService,
     private val discountStrategyFactory: DiscountStrategyFactory,
     private val orderService: OrderService,
-    private val paymentService: PaymentService
+    private val paymentService: PaymentService,
+    private val dailyProductSaleRankingService: DailyProductSaleRankingService
 ) {
     fun createOrder(criteria: OrderCriteria): OrderCompletedResult {
         //1. 유효한 쿠폰 조회
@@ -53,6 +56,9 @@ class OrderFacade(
         //8. 재고 감소
         //비관적 락 사용으로 인한 실행 순서 변경
         productService.decreaseStock(criteria.toProductQuantities())
+
+        //9. 일별 상품 판매 누적
+        dailyProductSaleRankingService.accumulate(LocalDate.now(), criteria.toProductSales())
 
         return OrderCompletedResult.from(order, payment)
     }

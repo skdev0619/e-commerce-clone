@@ -4,10 +4,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
-import java.time.LocalTime
 
 @Service
-class DailyProductSaleService(
+class DailyProductSaleAggregateService(
     private val dailyProductSaleRepository: DailyProductSaleRepository
 ) {
     @Transactional
