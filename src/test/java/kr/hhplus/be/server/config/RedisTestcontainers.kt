@@ -14,7 +14,7 @@ class RedisTestcontainers {
 
     companion object {
 
-        private val redisContainer = RedisContainer("redis:latest")
+        private val redisContainer = RedisContainer("redis:7.0.0")
             .apply {
                 start()
             }
