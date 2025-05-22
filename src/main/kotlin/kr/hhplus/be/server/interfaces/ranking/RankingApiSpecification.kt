@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
 
 import org.springframework.http.ResponseEntity
+import java.time.LocalDate
 
 @Tag(name = "Ranking", description = "랭킹 관련 API")
 interface RankingApiSpecification {
@@ -73,4 +74,58 @@ interface RankingApiSpecification {
         ]
     )
     fun topSellingProducts(@ParameterObject request: BestSellingProductsRequest): ResponseEntity<List<BestSellingProductsResponse>>
+
+    @Operation(
+        summary = "베스트셀러 상품 N개 조회",
+        description = "특정 일의 인기상품 상위 N개 상품을 조회한다",
+        parameters = [
+            Parameter(
+                name = "baseDate",
+                description = "조회 시작일",
+                example = "2025-04-24",
+                `in` = ParameterIn.QUERY,
+                schema = Schema(type = "string", format = "date")
+            ),
+            Parameter(
+                name = "limit",
+                description = "조회할 상품의 수",
+                example = "5",
+                `in` = ParameterIn.QUERY,
+                schema = Schema(type = "long", defaultValue = "5")
+            )
+        ]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "성공적으로 인기 상품 TOP 5개를 조회",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = BestSellingProductsResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "성공 응답 예시",
+                                value = """
+                                [   
+                                        { "productId": 1, "name": "베이직무지볼캡", "salesCount": 100, "price": 13900 },
+                                        { "productId": 2, "name": "검정 버킷햇", "salesCount": 90, "price": 20000 },
+                                        { "productId": 3, "name": "숏챙 페도라", "salesCount": 80, "price": 18900 },
+                                        { "productId": 4, "name": "NYC 비니", "salesCount": 70, "price": 12900 },
+                                        { "productId": 5, "name": "털방울 비니", "salesCount": 60, "price": 19900 }
+                                    
+                                ]
+                                """
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    fun dailyTopSellingProducts(
+        baseDate: LocalDate,
+        limit: Long
+    ): ResponseEntity<List<BestSellingProductsResponse>>
 }

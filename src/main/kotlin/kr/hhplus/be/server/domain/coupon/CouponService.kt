@@ -4,7 +4,6 @@ import kr.hhplus.be.server.coupon.domain.Coupon
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@Transactional
 @Service
 class CouponService(
     private val couponRepository: CouponRepository,
@@ -19,6 +18,12 @@ class CouponService(
             ?.let { couponRepository.findById(it) }
     }
 
+    @Transactional(readOnly = true)
+    fun findById(id: Long): Coupon? {
+        return couponRepository.findById(id)
+    }
+
+    @Transactional
     fun use(issueCouponId: Long) {
         val couponIssue = couponIssueRepository.findById(issueCouponId)
         couponIssue?.let {
@@ -26,6 +31,7 @@ class CouponService(
         }
     }
 
+    @Transactional
     fun issue(userId: Long, couponId: Long): CouponIssueInfo {
         val coupon = couponRepository.findByIdWithLock(couponId)
             ?: throw NoSuchElementException("존재하지 않는 쿠폰입니다")
@@ -52,5 +58,4 @@ class CouponService(
     fun findMyCoupons(userId: Long): List<CouponIssue> {
         return couponIssueRepository.findByUserId(userId)
     }
-
 }

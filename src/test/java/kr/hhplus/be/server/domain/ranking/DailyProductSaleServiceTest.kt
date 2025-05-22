@@ -9,7 +9,7 @@ import java.time.LocalDate
 class DailyProductSaleServiceTest {
 
     private val repository = FakeDailyProductSaleRepository()
-    private val service = DailyProductSaleService(repository)
+    private val service = DailyProductSaleAggregateService(repository)
 
     @DisplayName("일별 상품별 판매 집계 정보를 N건 저장한다")
     @Test
