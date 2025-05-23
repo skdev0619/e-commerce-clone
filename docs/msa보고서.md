@@ -54,7 +54,7 @@
 
 ## 3) (비동기 처리) 잔액 부족, 유효하지 않은 쿠폰
 
-![msa주문edge케이스.png](/docs/image/msa주문edge케이스.png)
+![주문msa엣지케이스.png](/docs/image/주문msa엣지케이스.png)
 
 ## 5. 추가 보완 사항
 
