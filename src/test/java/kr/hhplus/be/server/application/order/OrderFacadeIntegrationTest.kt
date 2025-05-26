@@ -4,6 +4,8 @@ import kr.hhplus.be.server.coupon.domain.Coupon
 import kr.hhplus.be.server.domain.cash.UserCash
 import kr.hhplus.be.server.domain.cash.UserCashRepository
 import kr.hhplus.be.server.domain.coupon.*
+import kr.hhplus.be.server.domain.order.OrderEvent
+import kr.hhplus.be.server.domain.order.OrderEventPublisher
 import kr.hhplus.be.server.domain.order.OrderRepository
 import kr.hhplus.be.server.domain.order.OrderStatus
 import kr.hhplus.be.server.domain.payment.PaymentRepository
@@ -17,8 +19,10 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
@@ -43,6 +47,9 @@ class OrderFacadeIntegrationTest {
 
     @Autowired
     private lateinit var paymentRepository: PaymentRepository
+
+    @MockitoBean
+    private lateinit var eventPublisher: OrderEventPublisher
 
     @Autowired
     private lateinit var orderFacade: OrderFacade
@@ -138,5 +145,23 @@ class OrderFacadeIntegrationTest {
         assertThrows<IllegalStateException> {
             orderFacade.createOrder(OrderCriteria(userId, orderItems, null))
         }
+    }
+
+    @DisplayName("주문 완료되면, 주문 완료 이벤트가 발행된다")
+    @Test
+    fun publishCompletedEvent() {
+        //given
+        val userId = 97L
+        val useCash = 10_000
+        userCashRepository.save(UserCash(userId, useCash))
+        val product = productRepository.save(Product("상품1", 10_000, 1))
+        val orderItems = listOf(OrderItemCommand(product.id, quantity = 1, price = 10_000))
+
+        //when
+        val criteria = OrderCriteria(userId, orderItems, null)
+        orderFacade.createOrder(criteria)
+
+        //then
+        verify(eventPublisher).publish(OrderEvent.Completed(criteria.toOrderInfo()))
     }
 }
