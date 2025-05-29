@@ -27,6 +27,16 @@ spring:
       mode: always
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9094
+    consumer:
+      auto-offset-reset: latest
+      bootstrap-servers: localhost:9094
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual
+      concurrency: 2
 ---
 spring.config.activate.on-profile: local, test
 
