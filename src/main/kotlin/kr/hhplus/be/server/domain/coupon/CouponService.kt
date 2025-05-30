@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CouponService(
     private val couponRepository: CouponRepository,
-    private val couponIssueRepository: CouponIssueRepository
+    private val couponIssueRepository: CouponIssueRepository,
+    private val availableCouponsRepository: AvailableCouponsRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -32,7 +33,19 @@ class CouponService(
     }
 
     @Transactional
+    fun register(coupon: Coupon): Coupon {
+        val coupon = couponRepository.save(coupon)
+        //쿠폰 등록 시, 발급 가능한 쿠폰 목록에 추가
+        availableCouponsRepository.add(coupon.id)
+        return coupon
+    }
+
+    @Transactional
     fun issue(userId: Long, couponId: Long): CouponIssueInfo {
+        if (availableCouponsRepository.isUnavailable(couponId)) {
+            throw IllegalStateException("발급할 수 없는 쿠폰입니다")
+        }
+
         val coupon = couponRepository.findByIdWithLock(couponId)
             ?: throw NoSuchElementException("존재하지 않는 쿠폰입니다")
 
@@ -40,7 +53,13 @@ class CouponService(
             throw IllegalStateException("이미 발급된 쿠폰입니다")
         }
 
-        val issuedCoupon = coupon.issue(userId)
+        val issuedCoupon = try {
+            coupon.issue(userId)
+        } catch (e: IllegalStateException) {
+            //쿠폰 재고 없으면, 발급 가능한 쿠폰 id 목록에서 제거
+            availableCouponsRepository.remove(couponId)
+            throw e
+        }
 
         couponIssueRepository.save(issuedCoupon)
 

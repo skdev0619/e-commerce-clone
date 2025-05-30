@@ -14,10 +14,10 @@ class CouponController(
 ) : CouponApiSpecification {
 
     @PostMapping("/{couponId}/issue")
-    override fun issue(@PathVariable couponId: Long, @RequestParam userId: Long): ResponseEntity<IssueCouponResponse> {
-        val issuedCoupon = firstComeCouponIssueService.issuedCoupon(userId, couponId)
-        val response = IssueCouponResponse.from(issuedCoupon)
-        return ResponseEntity.created(URI.create("/api/vi/coupons/issue")).body(response);
+    override fun issue(@PathVariable couponId: Long, @RequestParam userId: Long): ResponseEntity<TryIssueCouponResponse> {
+        val result = firstComeCouponIssueService.issuedCoupon(userId, couponId)
+        val response = TryIssueCouponResponse(result.couponId, result.userId)
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

@@ -25,3 +25,8 @@ data class IssueCouponResponse(
         }
     }
 }
+
+data class TryIssueCouponResponse(
+    val couponId: Long,
+    val userId: Long
+)

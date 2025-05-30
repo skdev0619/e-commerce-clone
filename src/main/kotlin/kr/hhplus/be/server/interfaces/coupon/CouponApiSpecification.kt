@@ -17,21 +17,16 @@ interface CouponApiSpecification {
     @ApiResponses(
         value = [
             ApiResponse(
-                responseCode = "201",
-                description = "쿠폰이 성공적으로 발급됨",
+                responseCode = "200",
+                description = "쿠폰 발급이 요청되었습니다. 잠시만 기다려 주세요",
                 content = [Content(
                     mediaType = "application/json",
                     schema = Schema(implementation = IssueCouponResponse::class),
                     examples = [ExampleObject(
                         value = """
                         {
-                            "id": 5,
                             "userId": 1,
-                            "couponId": 1,
-                            "name": "10%할인",
-                            "discountType": "PERCENTAGE",
-                            "discountValue": 10,
-                            "status": "ACTIVE"
+                            "couponId": 1
                         }
                         """
                     )]
@@ -58,7 +53,7 @@ interface CouponApiSpecification {
     fun issue(
         @Parameter(description = "발급받을 쿠폰의 ID", example = "1") couponId: Long,
         @Parameter(description = "사용자 ID", example = "1") userId: Long
-    ): ResponseEntity<IssueCouponResponse>
+    ): ResponseEntity<TryIssueCouponResponse>
 
     @Operation(summary = "쿠폰 목록 조회", description = "사용자가 보유한 쿠폰목록을 조회한다")
     @ApiResponses(

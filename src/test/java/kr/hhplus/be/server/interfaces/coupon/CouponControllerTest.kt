@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.interfaces.coupon
 
-import kr.hhplus.be.server.application.coupon.CouponIssueResult
-import kr.hhplus.be.server.application.coupon.CouponQueryService
-import kr.hhplus.be.server.application.coupon.FirstComeCouponIssueService
-import kr.hhplus.be.server.application.coupon.MyCouponResult
+import kr.hhplus.be.server.application.coupon.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -28,20 +25,19 @@ class CouponControllerTest {
     @MockitoBean
     private lateinit var firstComeCouponIssueService: FirstComeCouponIssueService
 
-    @DisplayName("쿠폰을 발급하면, 발급한 쿠폰의 정보를 반환한다")
+    @DisplayName("쿠폰을 발급 요청하면, 발급 요청한 쿠폰 id, 유저 id를 반환한다")
     @Test
     fun issueCoupon() {
         val userId = 1L
         val couponId = 5L
-        val result = CouponIssueResult(1L, userId, couponId, "10할인", "PERCENTAGE", 10, "ACTIVE")
+        val result = TryIssueCouponResult(couponId, userId)
 
         `when`(firstComeCouponIssueService.issuedCoupon(userId, couponId)).thenReturn(result)
 
         mockMvc.post("/api/v1/coupons/$couponId/issue?userId=$userId") {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isCreated() }
-            jsonPath("$.id") { value(result.id.toInt()) }
+            status { isOk() }
             jsonPath("$.userId") { value(result.userId.toInt()) }
             jsonPath("$.couponId") { value(result.couponId.toInt()) }
         }
