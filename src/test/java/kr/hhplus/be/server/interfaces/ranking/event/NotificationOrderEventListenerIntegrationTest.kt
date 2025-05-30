@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.interfaces.ranking.event
 
-import kr.hhplus.be.server.domain.notification.NotificationInfo
 import kr.hhplus.be.server.domain.notification.NotificationSender
 import kr.hhplus.be.server.domain.order.OrderEvent
 import kr.hhplus.be.server.domain.order.OrderEventPublisher
@@ -43,7 +42,7 @@ class NotificationOrderEventListenerIntegrationTest {
 
     private fun createOrderCompleteEvent(item: OrderItem): OrderEvent.Completed {
         return OrderEvent.Completed(
-            OrderInfo(userId = 98L, listOf(item), null)
+            "orderId", OrderInfo(userId = 98L, listOf(item), null)
         )
     }
 }

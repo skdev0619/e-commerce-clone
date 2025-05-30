@@ -159,9 +159,9 @@ class OrderFacadeIntegrationTest {
 
         //when
         val criteria = OrderCriteria(userId, orderItems, null)
-        orderFacade.createOrder(criteria)
+        val result = orderFacade.createOrder(criteria)
 
         //then
-        verify(eventPublisher).publish(OrderEvent.Completed(criteria.toOrderInfo()))
+        verify(eventPublisher).publish(OrderEvent.Completed(result.id.toString(), criteria.toOrderInfo()))
     }
 }

@@ -46,7 +46,7 @@ class RankingOrderEventListenerIntegrationTest {
 
     private fun createOrderCompleteEvent(item: OrderItem): OrderEvent.Completed {
         return OrderEvent.Completed(
-            OrderInfo(userId = 98L, listOf(item), null)
+            "orderId", OrderInfo(userId = 98L, listOf(item), null)
         )
     }
 }

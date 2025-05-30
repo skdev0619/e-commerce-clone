@@ -8,6 +8,7 @@ import kr.hhplus.be.server.domain.order.OrderService
 import kr.hhplus.be.server.domain.payment.Payment
 import kr.hhplus.be.server.domain.payment.PaymentService
 import kr.hhplus.be.server.domain.product.ProductService
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,6 +22,7 @@ class OrderFacade(
     private val discountStrategyFactory: DiscountStrategyFactory,
     private val orderService: OrderService,
     private val paymentService: PaymentService,
+    @Qualifier("orderKafkaEventPublisher")
     private val eventPublisher: OrderEventPublisher
 ) {
     fun createOrder(criteria: OrderCriteria): OrderCompletedResult {
@@ -58,7 +60,7 @@ class OrderFacade(
         productService.decreaseStock(criteria.toProductQuantities())
 
         //9. 주문 완료 이벤트 발행
-        eventPublisher.publish(OrderEvent.Completed(criteria.toOrderInfo()))
+        eventPublisher.publish(OrderEvent.Completed(order.id.toString(), criteria.toOrderInfo()))
 
         return OrderCompletedResult.from(order, payment)
     }
